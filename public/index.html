@@ -37,7 +37,7 @@
 
     let allFeeds = [];
     let currentPage = 1;
-    const postsPerPage = 100;
+    const postsPerPage = 50;
 
     function getFavicon(url) {
       try {
@@ -61,14 +61,19 @@
 
     async function loadFeeds() {
       try {
-        const res = await fetch('/api/fetch-feeds');
-        const feeds = await res.json();
-        allFeeds = feeds;
-        renderFeeds(feeds, currentPage);
-        renderPagination(feeds.length);
+        const res = await fetch('/api/refresh-feeds', { method: 'POST' }); // Fetch feeds from the API
+        const json = await res.json();
+
+        if (json.success) {
+          allFeeds = json.feeds; // Update the global feeds variable
+          renderFeeds(allFeeds, currentPage); // Render the feeds
+          renderPagination(allFeeds.length); // Render pagination
+        } else {
+          alert('❌ Failed to load feeds');
+        }
       } catch (err) {
-        feedList.innerHTML = '<li>Error loading feeds 😢</li>';
-        console.error(err);
+        console.error('Error loading feeds:', err);
+        alert('❌ Error loading feeds');
       }
     }
 
@@ -123,17 +128,8 @@
       refreshButton.textContent = 'Refreshing...';
 
       try {
-        const res = await fetch('/api/refresh-feeds', { method: 'POST' });
-        const json = await res.json();
-
-        if (json.success) {
-          alert(`✅ Refreshed ${json.feeds.length} items`);
-          allFeeds = json.feeds; // Update the global feeds variable
-          renderFeeds(allFeeds, currentPage); // Re-render the feeds
-          renderPagination(allFeeds.length); // Re-render pagination
-        } else {
-          alert('❌ Refresh failed');
-        }
+        await loadFeeds(); // Reload feeds
+        alert('✅ Feeds refreshed successfully!');
       } catch (err) {
         alert('❌ Error refreshing feeds');
         console.error(err);
