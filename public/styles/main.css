@@ -1,0 +1,275 @@
+/* Base Styles (Light Mode) */
+:root {
+  --bg: #f6f6ef;
+  --fg: #333;
+  --link: #0000cc;
+  --muted: #666;
+  --border: #d6d6d6;
+  --button-bg: #ffffff;
+  --input-bg: #fff;
+  --input-border: #ccc;
+}
+
+/* Common */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 2em auto;
+  max-width: 600px;
+  background: var(--bg);
+  color: var(--fg);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.favicon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+
+/* Button */
+#refresh-button {
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  color: white;
+  background-color: var(--button-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#refresh-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+#search {
+  display: block;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+}
+
+/* Header */
+h1 {
+  font-size: 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1em;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 1em;
+}
+
+a {
+  text-decoration: none;
+  color: var(--link);
+  font-weight: lighter;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+small, .meta {
+  color: var(--muted);
+  font-size: 0.9em;
+}
+
+/* Light Mode */
+body.light {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+body.light #refresh-button {
+  background-color: var(--button-bg);
+  color: var(--fg);
+  border: 1px solid var(--border);
+}
+
+body.light #search {
+  background-color: #fff;
+  border: 1px solid #ccc;
+}
+
+/* Dark Mode */
+body.dark {
+  background: #1c1c1c;
+  color: #eeeeee;
+}
+
+body.dark a {
+  color: #4ea1ff;
+}
+
+body.dark small,
+body.dark .meta {
+  color: #999;
+}
+
+body.dark #refresh-button {
+  background-color: #333;
+}
+
+body.dark #search {
+  background-color: #333;
+  border: 1px solid #444;
+  color: #fff;
+}
+
+/* Rosé Pine Themes */
+body.rosepine-light {
+  background: #191724;
+  color: #e0def4;
+}
+
+body.rosepine-light a {
+  color: #9ccfd8;
+}
+
+body.rosepine-light small,
+body.rosepine-light .meta {
+  color: #6e6a86;
+}
+
+body.rosepine-light #refresh-button {
+  background-color: #e0def4;
+  color: #191724;
+}
+
+body.rosepine-light #search {
+  background-color: #26233a;
+  border: 1px solid #6e6a86;
+  color: #e0def4;
+}
+
+/* Rosé Pine Dawn */
+body.rosepine-dawn {
+  background: #f4e1d2;
+  color: #191724;
+}
+
+body.rosepine-dawn a {
+  color: #a3c5e8;
+}
+
+body.rosepine-dawn small,
+body.rosepine-dawn .meta {
+  color: #a6a0b3;
+}
+
+body.rosepine-dawn #refresh-button {
+  background-color: #d9a3c5;
+}
+
+body.rosepine-dawn #search {
+  background-color: #f9d8e5;
+  border: 1px solid #d9a3c5;
+}
+
+/* Rosé Pine Moonlight */
+body.rosepine-moonlight {
+  background: #16161d;
+  color: #f5f0fa;
+}
+
+body.rosepine-moonlight a {
+  color: #88c0d0;
+}
+
+body.rosepine-moonlight small,
+body.rosepine-moonlight .meta {
+  color: #72738c;
+}
+
+body.rosepine-moonlight #refresh-button {
+  background-color: #f5f0fa;
+    color: black
+
+}
+
+body.rosepine-moonlight #search {
+  background-color: #2e2d3a;
+  border: 1px solid #88c0d0;
+  color: white
+}
+
+/* Title Bar */
+.title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5em;
+}
+
+.theme-selector select {
+  padding: 0.5em;
+  font-size: 1em;
+  background-color: #fff;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+}
+
+/* Pagination Container */
+#pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 1em;
+  gap: 0.5em;
+}
+
+/* Pagination Buttons */
+#pagination button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  color: var(--fg);
+  background-color: var(--button-bg);
+  border: 1px solid;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Active Pagination Button */
+#pagination button.active {
+  background-color: #0056b3;
+  color: white;
+  font-weight: bold;
+}
+
+/* Hover Effect for Pagination Buttons */
+#pagination button:hover {
+  background-color: #0056b3;
+  color: white;
+}
+
+/* Disabled Pagination Button */
+#pagination button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Style for siteUrl links */
+.site-url {
+  color: var(--link);
+  text-decoration: none;
+  font-size: 0.9em;
+  font-weight: 400;
+}
+
+.site-url:hover {
+  text-decoration: underline;
+}

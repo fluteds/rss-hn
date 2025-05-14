@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hacker News</title>
+  <link rel="stylesheet" href="/styles/main.css" />
+</head>
+<body class="light">
+  <div class="title-bar">
+    <h1>Hacker News</h1>
+    <button id="refresh-button">🔄 Refresh Feeds</button>
+
+    <div class="theme-selector">
+      <select id="theme-select">
+        <option value="light">☀️ Light</option>
+        <option value="dark">🌙 Dark</option>
+        <option value="rosepine-light">🌸 Rosé Pine Light</option>
+        <option value="rosepine-dawn">🌅 Rosé Pine Dawn</option>
+        <option value="rosepine-moonlight">🌙 Rosé Pine Moonlight</option>
+      </select>
+    </div>
+  </div>
+
+  <input id="search" type="text" placeholder="🔍 Search titles..." />
+
+  <ul id="feed-list"></ul>
+
+  <script>
+    const feedList = document.getElementById('feed-list');
+    const refreshButton = document.getElementById('refresh-button');
+    const searchInput = document.getElementById('search');
+    const themeSelect = document.getElementById('theme-select');
+    const paginationContainer = document.createElement('div');
+    paginationContainer.id = 'pagination';
+    document.body.appendChild(paginationContainer);
+
+    let allFeeds = [];
+    let currentPage = 1;
+    const postsPerPage = 100;
+
+    function getFavicon(url) {
+      try {
+        const host = new URL(url).hostname;
+        return `https://www.google.com/s2/favicons?domain=${host}&sz=32`;
+      } catch {
+        return '';
+      }
+    }
+
+    function timeAgo(date) {
+      const now = new Date();
+      const diff = Math.floor((now - date) / 1000); // seconds
+
+      if (diff < 60) return 'just now';
+      if (diff < 3600) return `${Math.floor(diff / 60)} minute${diff < 120 ? '' : 's'} ago`;
+      if (diff < 86400) return `${Math.floor(diff / 3600)} hour${diff < 7200 ? '' : 's'} ago`;
+      if (diff < 604800) return `${Math.floor(diff / 86400)} day${diff < 172800 ? '' : 's'} ago`;
+      return date.toLocaleDateString(); // fallback to full date
+    }
+
+    async function loadFeeds() {
+      try {
+        const res = await fetch('/api/fetch-feeds');
+        const feeds = await res.json();
+        allFeeds = feeds;
+        renderFeeds(feeds, currentPage);
+        renderPagination(feeds.length);
+      } catch (err) {
+        feedList.innerHTML = '<li>Error loading feeds 😢</li>';
+        console.error(err);
+      }
+    }
+
+    function renderFeeds(items, page) {
+      feedList.innerHTML = '';
+      const startIndex = (page - 1) * postsPerPage;
+      const endIndex = startIndex + postsPerPage;
+      const paginatedItems = items.slice(startIndex, endIndex);
+
+      paginatedItems.forEach(item => {
+        const li = document.createElement('li');
+        const favicon = getFavicon(item.link || '');
+        const pubDate = new Date(item.pubDate);
+        li.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 1em;">
+            <img src="${favicon}" alt="" class="favicon" />
+            <div class="feed-content">
+              <a href="${item.link}" target="_blank" rel="noopener noreferrer">
+                <strong>${item.title}</strong>
+              </a>
+                <div class="meta">
+                ${item.siteBaseUrl ? `<a href="https://${item.siteBaseUrl}" target="_blank" rel="noopener noreferrer" class="site-url">
+                  ${item.siteBaseUrl}</a>` : '<span class="site-url">Unknown</span>'}
+                • ${timeAgo(pubDate)} • ${item.source || 'Unknown'}
+                </div>
+            </div>
+          </div>
+        `;
+        feedList.appendChild(li);
+      });
+    }
+
+    function renderPagination(totalItems) {
+      paginationContainer.innerHTML = '';
+      const totalPages = Math.ceil(totalItems / postsPerPage);
+
+      for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement('button');
+        button.textContent = i;
+        button.className = i === currentPage ? 'active' : '';
+        button.addEventListener('click', () => {
+          currentPage = i;
+          renderFeeds(allFeeds, currentPage);
+          renderPagination(totalItems);
+        });
+        paginationContainer.appendChild(button);
+      }
+    }
+
+    refreshButton.addEventListener('click', async () => {
+      refreshButton.disabled = true;
+      refreshButton.textContent = 'Refreshing...';
+
+      try {
+        const res = await fetch('/api/refresh-feeds', { method: 'POST' });
+        const json = await res.json();
+
+        if (json.success) {
+          alert(`✅ Refreshed ${json.feeds.length} items`);
+          allFeeds = json.feeds; // Update the global feeds variable
+          renderFeeds(allFeeds, currentPage); // Re-render the feeds
+          renderPagination(allFeeds.length); // Re-render pagination
+        } else {
+          alert('❌ Refresh failed');
+        }
+      } catch (err) {
+        alert('❌ Error refreshing feeds');
+        console.error(err);
+      } finally {
+        refreshButton.disabled = false;
+        refreshButton.textContent = '🔄 Refresh Feeds';
+      }
+    });
+
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.toLowerCase();
+      const filtered = allFeeds.filter(feed =>
+        feed.title.toLowerCase().includes(query)
+      );
+      currentPage = 1; // Reset to the first page when searching
+      renderFeeds(filtered, currentPage);
+      renderPagination(filtered.length);
+    });
+
+    // Theme switcher
+    themeSelect.addEventListener('change', () => {
+      document.body.className = themeSelect.value;
+      localStorage.setItem('theme', themeSelect.value);
+    });
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      document.body.className = savedTheme;
+      themeSelect.value = savedTheme;
+    }
+
+    loadFeeds();
+  </script>
+</body>
+</html>
