@@ -4,165 +4,221 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hacker News</title>
-  <link rel="stylesheet" href="/styles/main.css" />
+  <link rel="stylesheet" href="styles/main.css" />
 </head>
 <body class="light">
   <div class="title-bar">
     <h1>Hacker News</h1>
+    
     <button id="refresh-button">🔄 Refresh Feeds</button>
 
     <div class="theme-selector">
       <select id="theme-select">
         <option value="light">☀️ Light</option>
         <option value="dark">🌙 Dark</option>
-        <option value="rosepine-light">🌸 Rosé Pine Light</option>
         <option value="rosepine-dawn">🌅 Rosé Pine Dawn</option>
         <option value="rosepine-moonlight">🌙 Rosé Pine Moonlight</option>
       </select>
     </div>
   </div>
 
-  <input id="search" type="text" placeholder="🔍 Search titles..." />
+  <input id="search" type="text" placeholder="🔍 Search articles..." />
 
-  <ul id="feed-list"></ul>
+<div id="loading-indicator" class="loading-indicator"></div>
+<ul id="feed-list"></ul>
+  
+  <div id="pagination"></div>
 
-  <script>
-    const feedList = document.getElementById('feed-list');
-    const refreshButton = document.getElementById('refresh-button');
-    const searchInput = document.getElementById('search');
-    const themeSelect = document.getElementById('theme-select');
-    const paginationContainer = document.createElement('div');
-    paginationContainer.id = 'pagination';
-    document.body.appendChild(paginationContainer);
+  <div class="footer">
+        <div id="last-updated" class="last-updated">Feed last fetched: Never</div>
+  </div>
 
-    let allFeeds = [];
-    let currentPage = 1;
-    const postsPerPage = 50;
+    <a href="https://github.com/fluteds/rss-hn" target="_blank">
+      <svg height="15" viewBox="0 0 16 16" version="1.1" width="15" aria-hidden="true">
+        <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+      </svg>
+      GitHub
+    </a>
+  </div>
 
-    function getFavicon(url) {
-      try {
-        const host = new URL(url).hostname;
-        return `https://www.google.com/s2/favicons?domain=${host}&sz=32`;
-      } catch {
-        return '';
-      }
+<script>
+  const feedList = document.getElementById('feed-list');
+  const refreshButton = document.getElementById('refresh-button');
+  const searchInput = document.getElementById('search');
+  const themeSelect = document.getElementById('theme-select');
+  const paginationContainer = document.createElement('div');
+  paginationContainer.id = 'pagination';
+  document.body.appendChild(paginationContainer);
+  const lastUpdatedElement = document.getElementById('last-updated');
+  const loadingIndicator = document.getElementById('loading-indicator');
+
+  let allFeeds = [];
+  let currentPage = 1;
+  const postsPerPage = 30;
+
+  const CACHE_EXPIRATION = 60 * 60 * 1000; // 1 hour
+  const FEEDS_CACHE_KEY = 'cachedFeeds';
+  const LAST_UPDATED_KEY = 'lastUpdated';
+
+  function getFavicon(url) {
+    try {
+      const host = new URL(url).hostname;
+      return `https://www.google.com/s2/favicons?domain=${host}&sz=32`;
+    } catch {
+      return '';
     }
+  }
 
-    function timeAgo(date) {
-      const now = new Date();
-      const diff = Math.floor((now - date) / 1000); // seconds
+  function timeAgo(date) {
+    const now = new Date();
+    const diff = Math.floor((now - date) / 1000);
+    if (diff < 60) return 'just now';
+    if (diff < 3600) return `${Math.floor(diff / 60)} minute${diff < 120 ? '' : 's'} ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)} hour${diff < 7200 ? '' : 's'} ago`;
+    if (diff < 604800) return `${Math.floor(diff / 86400)} day${diff < 172800 ? '' : 's'} ago`;
+    return date.toLocaleDateString();
+  }
 
-      if (diff < 60) return 'just now';
-      if (diff < 3600) return `${Math.floor(diff / 60)} minute${diff < 120 ? '' : 's'} ago`;
-      if (diff < 86400) return `${Math.floor(diff / 3600)} hour${diff < 7200 ? '' : 's'} ago`;
-      if (diff < 604800) return `${Math.floor(diff / 86400)} day${diff < 172800 ? '' : 's'} ago`;
-      return date.toLocaleDateString(); // fallback to full date
-    }
+  function renderFeeds(items, page) {
+    feedList.innerHTML = '';
+    const startIndex = (page - 1) * postsPerPage;
+    const endIndex = startIndex + postsPerPage;
+    const paginatedItems = items.slice(startIndex, endIndex);
 
-    async function loadFeeds() {
-      try {
-        const res = await fetch('/api/refresh-feeds', { method: 'POST' }); // Fetch feeds from the API
-        const json = await res.json();
-
-        if (json.success) {
-          allFeeds = json.feeds; // Update the global feeds variable
-          renderFeeds(allFeeds, currentPage); // Render the feeds
-          renderPagination(allFeeds.length); // Render pagination
-        } else {
-          alert('❌ Failed to load feeds');
-        }
-      } catch (err) {
-        console.error('Error loading feeds:', err);
-        alert('❌ Error loading feeds');
-      }
-    }
-
-    function renderFeeds(items, page) {
-      feedList.innerHTML = '';
-      const startIndex = (page - 1) * postsPerPage;
-      const endIndex = startIndex + postsPerPage;
-      const paginatedItems = items.slice(startIndex, endIndex);
-
-      paginatedItems.forEach(item => {
-        const li = document.createElement('li');
-        const favicon = getFavicon(item.link || '');
-        const pubDate = new Date(item.pubDate);
-        li.innerHTML = `
-          <div style="display: flex; align-items: center; gap: 1em;">
-            <img src="${favicon}" alt="" class="favicon" />
-            <div class="feed-content">
-              <a href="${item.link}" target="_blank" rel="noopener noreferrer">
-                <strong>${item.title}</strong>
-              </a>
-                <div class="meta">
-                ${item.siteBaseUrl ? `<a href="https://${item.siteBaseUrl}" target="_blank" rel="noopener noreferrer" class="site-url">
-                  ${item.siteBaseUrl}</a>` : '<span class="site-url">Unknown</span>'}
-                • ${timeAgo(pubDate)} • ${item.source || 'Unknown'}
-                </div>
+    paginatedItems.forEach(item => {
+      const li = document.createElement('li');
+      const favicon = getFavicon(item.link || '');
+      const pubDate = new Date(item.pubDate);
+      li.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 1em;">
+          <img src="${favicon}" alt="" class="favicon" />
+          <div class="feed-content">
+            <a href="${item.link}" target="_blank" rel="noopener noreferrer">
+              <strong>${item.title}</strong>
+            </a>
+            <div class="meta">
+              ${item.siteBaseUrl ? `<a href="https://${item.siteBaseUrl}" target="_blank" rel="noopener noreferrer" class="site-url">
+                ${item.siteBaseUrl}</a>` : '<span class="site-url">Unknown</span>'}
+              • ${timeAgo(pubDate)} • ${item.source || 'Unknown'}
             </div>
           </div>
-        `;
-        feedList.appendChild(li);
-      });
+        </div>
+      `;
+      feedList.appendChild(li);
+    });
+  }
+
+  function renderPagination(totalItems) {
+    paginationContainer.innerHTML = '';
+    const totalPages = Math.ceil(totalItems / postsPerPage);
+    const maxVisibleButtons = 5;
+    const startPage = Math.max(1, currentPage - Math.floor(maxVisibleButtons / 2));
+    const endPage = Math.min(totalPages, startPage + maxVisibleButtons - 1);
+
+    if (currentPage > 1) {
+      const prev = document.createElement('button');
+      prev.textContent = 'Previous';
+      prev.onclick = () => {
+        currentPage--;
+        renderFeeds(allFeeds, currentPage);
+        renderPagination(allFeeds.length);
+      };
+      paginationContainer.appendChild(prev);
     }
 
-    function renderPagination(totalItems) {
-      paginationContainer.innerHTML = '';
-      const totalPages = Math.ceil(totalItems / postsPerPage);
+    for (let i = startPage; i <= endPage; i++) {
+      const btn = document.createElement('button');
+      btn.textContent = i;
+      btn.className = i === currentPage ? 'active' : '';
+      btn.onclick = () => {
+        currentPage = i;
+        renderFeeds(allFeeds, currentPage);
+        renderPagination(allFeeds.length);
+      };
+      paginationContainer.appendChild(btn);
+    }
 
-      for (let i = 1; i <= totalPages; i++) {
-        const button = document.createElement('button');
-        button.textContent = i;
-        button.className = i === currentPage ? 'active' : '';
-        button.addEventListener('click', () => {
-          currentPage = i;
-          renderFeeds(allFeeds, currentPage);
-          renderPagination(totalItems);
-        });
-        paginationContainer.appendChild(button);
+    if (currentPage < totalPages) {
+      const next = document.createElement('button');
+      next.textContent = 'Next';
+      next.onclick = () => {
+        currentPage++;
+        renderFeeds(allFeeds, currentPage);
+        renderPagination(allFeeds.length);
+      };
+      paginationContainer.appendChild(next);
+    }
+  }
+
+  async function loadFeeds({ force = false } = {}) {
+    const cached = localStorage.getItem(FEEDS_CACHE_KEY);
+    const lastUpdated = localStorage.getItem(LAST_UPDATED_KEY);
+    const now = Date.now();
+    const isCacheValid = cached && lastUpdated && now - new Date(lastUpdated).getTime() < CACHE_EXPIRATION;
+
+    // Show cached content immediately
+    if (cached) {
+      allFeeds = JSON.parse(cached);
+      renderFeeds(allFeeds, currentPage);
+      renderPagination(allFeeds.length);
+      lastUpdatedElement.textContent = `Last updated: ${new Date(lastUpdated).toLocaleString()}`;
+    }
+
+    // Skip revalidation unless needed
+    if (!force && isCacheValid) return;
+
+    try {
+      const res = await fetch('/api/refresh-feeds', { method: 'POST' });
+      const json = await res.json();
+
+      if (json.success) {
+        allFeeds = json.feeds;
+        renderFeeds(allFeeds, currentPage);
+        renderPagination(allFeeds.length);
+        const updated = new Date().toISOString();
+        localStorage.setItem(FEEDS_CACHE_KEY, JSON.stringify(allFeeds));
+        localStorage.setItem(LAST_UPDATED_KEY, updated);
+        lastUpdatedElement.textContent = `Last updated: ${new Date(updated).toLocaleString()}`;
+      } else {
+        console.warn('Failed to fetch new feeds, showing cached');
       }
+    } catch (err) {
+      console.error('Error revalidating feeds:', err);
     }
+  }
 
-    refreshButton.addEventListener('click', async () => {
-      refreshButton.disabled = true;
-      refreshButton.textContent = 'Refreshing...';
+  refreshButton.addEventListener('click', async () => {
+    refreshButton.disabled = true;
+    refreshButton.textContent = 'Refreshing. Please wait.';
+    await loadFeeds({ force: true });
+    refreshButton.disabled = false;
+    refreshButton.textContent = '🔄 Refresh Feeds';
+  });
 
-      try {
-        await loadFeeds(); // Reload feeds
-        alert('✅ Feeds refreshed successfully!');
-      } catch (err) {
-        alert('❌ Error refreshing feeds');
-        console.error(err);
-      } finally {
-        refreshButton.disabled = false;
-        refreshButton.textContent = '🔄 Refresh Feeds';
-      }
-    });
+  searchInput.addEventListener('input', () => {
+    const query = searchInput.value.toLowerCase();
+    const filtered = allFeeds.filter(f => f.title.toLowerCase().includes(query));
+    currentPage = 1;
+    renderFeeds(filtered, currentPage);
+    renderPagination(filtered.length);
+  });
 
-    searchInput.addEventListener('input', () => {
-      const query = searchInput.value.toLowerCase();
-      const filtered = allFeeds.filter(feed =>
-        feed.title.toLowerCase().includes(query)
-      );
-      currentPage = 1; // Reset to the first page when searching
-      renderFeeds(filtered, currentPage);
-      renderPagination(filtered.length);
-    });
+  themeSelect.addEventListener('change', () => {
+    document.body.className = themeSelect.value;
+    localStorage.setItem('theme', themeSelect.value);
+  });
 
-    // Theme switcher
-    themeSelect.addEventListener('change', () => {
-      document.body.className = themeSelect.value;
-      localStorage.setItem('theme', themeSelect.value);
-    });
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) {
+    document.body.className = savedTheme;
+    themeSelect.value = savedTheme;
+  }
 
-    // Load saved theme
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-      document.body.className = savedTheme;
-      themeSelect.value = savedTheme;
-    }
+  // Run on page load
+  window.addEventListener('DOMContentLoaded', () => {
+    loadFeeds(); // Stale while revalidate by default
+  });
+</script>
 
-    loadFeeds();
-  </script>
 </body>
 </html>

@@ -1,5 +1,4 @@
 const Parser = require('rss-parser');
-const fs = require('fs');
 const parser = new Parser();
 
 const feeds = [
@@ -9,13 +8,10 @@ const feeds = [
   { name: 'BBC News', url: 'http://newsrss.bbc.co.uk/rss/newsonline_world_edition/front_page/rss.xml' },
   { name: 'New York Times', url: 'http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml' },
   { name: 'The Economist', url: 'http://www.economist.com/rss/finance_and_economics_rss.xml' },
-  { name: 'SkySports F1', url: 'http://www.skysports.com/rss/0,20514,12433,00.xml' },
   { name: 'The Verge', url: 'http://www.theverge.com/rss/full.xml' },
-  { name: '@leekduck on Twitter', url: 'https://rsshub.app/twitter/user/leekduck/exclude_rts_replies=1&forceWebApi=1' },
-  { name: 'Flightradar24 Blog', url: 'http://www.flightradar24.com/blog/feed/' },
+  { name: 'LeekDuck', url: 'https://rsshub.app/twitter/user/leekduck/exclude_rts_replies=1&forceWebApi=1' },
+  { name: 'Flightradar24', url: 'http://www.flightradar24.com/blog/feed/' },
   { name: 'Cosmic Voyage', url: 'https://cosmic.voyage/rss.xml' },
-  { name: 'BBC News - World', url: 'http://feeds.bbci.co.uk/news/world/rss.xml' },
-  { name: 'Hacker News Front Page', url: 'https://hnrss.org/frontpage' },
   { name: 'maia blog', url: 'https://maia.crimew.gay/feed.xml' },
   { name: 'Xe Iaso\'s blog', url: 'https://xeiaso.net/blog.rss' },
   { name: '4chan', url: 'https://raw.githubusercontent.com/fluteds/4chan-rss/refs/heads/master/rss.xml' },
@@ -31,27 +27,31 @@ const feeds = [
 
 export default async function fetchFeeds() {
   const allItems = [];
+  const MAX_ITEMS_PER_FEED = 10;
 
   await Promise.all(
     feeds.map(async (feed) => {
       try {
         const parsedFeed = await parser.parseURL(feed.url);
-        const items = parsedFeed.items.map(item => {
-          const pubDate = new Date(item.pubDate);
-          if (isNaN(pubDate)) return null;
+        const items = parsedFeed.items
+          .slice(0, MAX_ITEMS_PER_FEED) // Only keep the first N items
+          .map(item => {
+            const pubDate = new Date(item.pubDate);
+            if (isNaN(pubDate)) return null;
 
-          let siteBaseUrl = new URL(feed.url).hostname;
-          siteBaseUrl = siteBaseUrl.replace(/^(www\.|feed\.)/, '');
+            let siteBaseUrl = new URL(feed.url).hostname;
+            siteBaseUrl = siteBaseUrl.replace(/^(www\.|feed\.)/, '');
 
-          return {
-            title: item.title,
-            link: item.link,
-            pubDate: pubDate.toISOString(),
-            source: feed.name,
-            siteUrl: feed.url,
-            siteBaseUrl,
-          };
-        }).filter(item => item !== null);
+            return {
+              title: item.title,
+              link: item.link,
+              pubDate: pubDate.toISOString(),
+              source: feed.name,
+              siteUrl: feed.url,
+              siteBaseUrl,
+            };
+          })
+          .filter(item => item !== null);
 
         allItems.push(...items);
       } catch (error) {
@@ -62,5 +62,5 @@ export default async function fetchFeeds() {
 
   allItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
   console.log(`Fetched ${allItems.length} items`);
-  return allItems; // Return the feeds instead of writing to a file
+  return allItems;
 }
