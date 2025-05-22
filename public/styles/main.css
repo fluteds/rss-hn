@@ -1,4 +1,3 @@
-/* Base Styles (Light Mode) */
 :root {
   --bg: #f6f6ef;
   --fg: #333;
@@ -10,11 +9,10 @@
   --input-border: #ccc;
 }
 
-/* Common */
 body {
   font-family: -apple-system, BlinkMacSystemFont, sans-serif;
   margin: 2em auto;
-  max-width: 600px;
+  max-width: 600px; 
   background: var(--bg);
   color: var(--fg);
   transition: background 0.3s ease, color 0.3s ease;
@@ -25,20 +23,19 @@ body {
   height: 15px;
   flex-shrink: 0;
   border-radius: 4px;
-  background-color: var(--bg);
+  background-color: var(--fg);
 }
 
-/* Button */
 #refresh-button {
   margin: 1rem 0;
   padding: 0.5rem 1rem;
   font-size: 1rem;
-  color: white;
+  color: var(--fg);
   background-color: var(--button-bg);
   border: 1px solid var(--border);
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #refresh-button:disabled {
@@ -56,11 +53,11 @@ body {
   background-color: var(--input-bg);
   border: 1px solid var(--input-border);
   border-radius: 4px;
+  color: var(--fg);
 }
 
-.last-updated {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+.last-updated, .next-update {
+  margin: 0.5rem 0;
   font-size: 0.9rem;
   color: var(--muted);
 }
@@ -71,7 +68,6 @@ body {
   margin: 1rem 0;
 }
 
-/* Header */
 h1 {
   font-size: 24px;
   border-bottom: 1px solid var(--border);
@@ -97,8 +93,35 @@ a:hover {
 }
 
 .footer {
-  text-align: center; 
+  text-align: center;
   margin-top: 1em;
+}
+
+.cache-status {
+  margin-top: 0.3em;
+  font-size: 0.85em;
+  color: var(--muted);
+  transition: opacity 0.3s ease;
+}
+
+.toast {
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+  padding: 0.8em 1.2em;
+  border-radius: 0.5em;
+  font-size: 0.9em;
+  box-shadow: 0 0.5em 1em rgba(0,0,0,0.3);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 small, .meta {
@@ -106,101 +129,77 @@ small, .meta {
   font-size: 0.9em;
 }
 
-/* Light Mode */
+/* LIGHT THEME */
 body.light {
-  background: var(--bg);
-  color: var(--fg);
+  --bg: #f6f6ef;
+  --fg: #333;
+  --link: #0000cc;
+  --muted: #666;
+  --border: #d6d6d6;
+  --button-bg: #ffffff;
+  --input-bg: #fff;
+  --input-border: #ccc;
 }
 
-body.light #refresh-button {
-  background-color: var(--button-bg);
-  color: var(--fg);
-  border: 1px solid var(--border);
-}
-
-body.light #search {
-  background-color: #fff;
-  border: 1px solid #ccc;
-}
-
-/* Dark Mode */
-body.dark {
-  background: #1c1c1c;
-  color: #eeeeee;
-}
-
-body.dark a {
-  color: #4ea1ff;
-}
-
-body.dark small,
-body.dark .meta {
-  color: #999;
-}
-
-body.dark #refresh-button {
-  background-color: #333;
-}
-
-body.dark #search {
-  background-color: #333;
-  border: 1px solid #444;
+body.light .toast {
+  background: #333;
   color: #fff;
 }
 
-/* Rosé Pine Themes */
-/* Rosé Pine Dawn */
+/* DARK THEME */
+body.dark {
+  --bg: #1c1c1c;
+  --fg: #eeeeee;
+  --link: #4ea1ff;
+  --muted: #999;
+  --border: #333;
+  --button-bg: #333;
+  --input-bg: #2a2a2a;
+  --input-border: #444;
+}
+
+body.dark .toast {
+  background: #eee;
+  color: #111;
+}
+
+/* ROSE PINE DAWN */
 body.rosepine-dawn {
-  background: #f4e1d2;
+  --bg: #f4e1d2;
+  --fg: #191724;
+  --link: #a3c5e8;
+  --muted: #a6a0b3;
+  --border: #d9a3c5;
+  --button-bg: #d9a3c5;
+  --input-bg: #f9d8e5;
+  --input-border: #d9a3c5;
+}
+
+body.rosepine-dawn .toast {
+  background: #d4b2c8;
   color: #191724;
+  box-shadow: 0 0.5em 1em rgba(100, 80, 100, 0.3);
 }
 
-body.rosepine-dawn a {
-  color: #a3c5e8;
-}
-
-body.rosepine-dawn small,
-body.rosepine-dawn .meta {
-  color: #a6a0b3;
-}
-
-body.rosepine-dawn #refresh-button {
-  background-color: #d9a3c5;
-}
-
-body.rosepine-dawn #search {
-  background-color: #f9d8e5;
-  border: 1px solid #d9a3c5;
-}
-
-/* Rosé Pine Moonlight */
+/* ROSE PINE MOONLIGHT */
 body.rosepine-moonlight {
-  background: #16161d;
+  --bg: #16161d;
+  --fg: #f5f0fa;
+  --link: #88c0d0;
+  --muted: #72738c;
+  --border: #2e2d3a;
+  --button-bg: #f5f0fa;
+  --input-bg: #2e2d3a;
+  --input-border: #88c0d0;
+}
+
+body.rosepine-moonlight .toast {
+  background: #2e2d3a;
   color: #f5f0fa;
+  box-shadow: 0 0.5em 1em rgba(200, 200, 250, 0.2);
 }
 
-body.rosepine-moonlight a {
-  color: #88c0d0;
-}
 
-body.rosepine-moonlight small,
-body.rosepine-moonlight .meta {
-  color: #72738c;
-}
-
-body.rosepine-moonlight #refresh-button {
-  background-color: #f5f0fa;
-    color: black
-
-}
-
-body.rosepine-moonlight #search {
-  background-color: #2e2d3a;
-  border: 1px solid #88c0d0;
-  color: white
-}
-
-/* Title Bar */
 .title-bar {
   display: flex;
   justify-content: space-between;
@@ -211,12 +210,14 @@ body.rosepine-moonlight #search {
 .theme-selector select {
   padding: 0.5em;
   font-size: 1em;
-  background-color: #fff;
-  border: 1px solid var(--border);
+  background-color: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--fg);
   border-radius: 5px;
 }
 
-/* Pagination Container */
+
+/* Pagination */
 #pagination {
   display: flex;
   justify-content: center;
@@ -224,38 +225,33 @@ body.rosepine-moonlight #search {
   gap: 0.5em;
 }
 
-/* Pagination Buttons */
 #pagination button {
   padding: 0.5rem 1rem;
   font-size: 1rem;
   color: var(--fg);
   background-color: var(--button-bg);
-  border: 1px solid;
+  border: 1px solid var(--border);
   border-radius: 4px;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Active Pagination Button */
+#pagination button:hover {
+  background-color: var(--link);
+  color: #fff;
+}
+
 #pagination button.active {
-  background-color: #0056b3;
+  background-color: var(--link);
   color: white;
   font-weight: bold;
 }
 
-/* Hover Effect for Pagination Buttons */
-#pagination button:hover {
-  background-color: #0056b3;
-  color: white;
-}
-
-/* Disabled Pagination Button */
 #pagination button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-/* Style for siteUrl links */
 .site-url {
   color: var(--link);
   text-decoration: none;
@@ -267,7 +263,7 @@ body.rosepine-moonlight #search {
   text-decoration: underline;
 }
 
-/* Responsive Styles for Smaller Screens like iPads */
+/* Responsive */
 @media (max-width: 768px) {
   body {
     font-size: 0.9rem;
@@ -302,7 +298,6 @@ body.rosepine-moonlight #search {
   }
 }
 
-/* Styles for Mobile devices like iPhones */
 @media (max-width: 480px) {
   .title-bar h1 {
     font-size: 1.5rem;

@@ -1,29 +1,6 @@
-const Parser = require('rss-parser');
+import Parser from 'rss-parser';
+import feeds from '../config/feeds.json';
 const parser = new Parser();
-
-const feeds = [
-  { name: 'Hacker News', url: 'https://hnrss.org/frontpage' },
-  { name: 'Lobsters', url: 'https://lobste.rs/rss' },
-  { name: 'BBC Tech', url: 'http://feeds.bbci.co.uk/news/technology/rss.xml' },
-  { name: 'BBC News', url: 'http://newsrss.bbc.co.uk/rss/newsonline_world_edition/front_page/rss.xml' },
-  { name: 'New York Times', url: 'http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml' },
-  { name: 'The Economist', url: 'http://www.economist.com/rss/finance_and_economics_rss.xml' },
-  { name: 'The Verge', url: 'http://www.theverge.com/rss/full.xml' },
-  { name: 'LeekDuck', url: 'https://rsshub.app/twitter/user/leekduck/exclude_rts_replies=1&forceWebApi=1' },
-  { name: 'Flightradar24', url: 'http://www.flightradar24.com/blog/feed/' },
-  { name: 'Cosmic Voyage', url: 'https://cosmic.voyage/rss.xml' },
-  { name: 'maia blog', url: 'https://maia.crimew.gay/feed.xml' },
-  { name: 'Xe Iaso\'s blog', url: 'https://xeiaso.net/blog.rss' },
-  { name: '4chan', url: 'https://raw.githubusercontent.com/fluteds/4chan-rss/refs/heads/master/rss.xml' },
-  { name: 'sizeof(cat)', url: 'https://sizeof.cat/index.xml' },
-  { name: 'the soap zone', url: 'https://soap.systems/rss.xml' },
-  { name: 'Retro Handhelds', url: 'https://retrohandhelds.gg/feed/' },
-  { name: 'Ersei \'n Notes', url: 'https://ersei.net/en/notes.atom' },
-  { name: 'Ersei \'n Stuff', url: 'https://ersei.net/en/blog.atom' },
-  { name: 'Autosport.com - Formula 1', url: 'https://www.autosport.com/rss/feed/f1' },
-  { name: 'Fluted\'s Blog', url: 'https://fluted.omg.lol/rss.xml' },
-  { name: 'Clear the Lobby', url: 'https://kill-the-newsletter.com/feeds/73nlirv0zvuev6n3iuol.xml' }
-];
 
 export default async function fetchFeeds() {
   const allItems = [];
@@ -34,7 +11,7 @@ export default async function fetchFeeds() {
       try {
         const parsedFeed = await parser.parseURL(feed.url);
         const items = parsedFeed.items
-          .slice(0, MAX_ITEMS_PER_FEED) // Only keep the first N items
+          .slice(0, MAX_ITEMS_PER_FEED)
           .map(item => {
             const pubDate = new Date(item.pubDate);
             if (isNaN(pubDate)) return null;
