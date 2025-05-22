@@ -10,7 +10,7 @@ Plus some more Rosé Pine inspired themes.
 
 ## How it works
 
-- Scrapes a list of RSS feeds in `/config/feeds.js`.
+- Scrapes a list of RSS feeds in `/config/feeds.json`.
 - Formats them into a Hacker News style page sorted by newest first.
 - Uses a serverless backend to regenerate posts and also uses a in browser caching mechanism to store fetched RSS feed data temporarily, reducing the time to reload.
 
@@ -19,8 +19,7 @@ Plus some more Rosé Pine inspired themes.
 The application uses a configuration file to manage settings such as theme preferences, RSS feed sources, and user-specific options. This file is located in the `config` directory and is loaded during application startup. Users can modify this file to:
 
 - Add or remove RSS feed URLs.
-- Set a default theme for the application.
-- Enable or disable specific features like offline mode or user authentication.
+- [] Set a default theme for the application.
 
 Changes to the configuration file are automatically applied on the next application restart, making it easy to customize the behavior of the RSS reader.
 
