@@ -2,6 +2,7 @@
   --bg: #f6f6ef;
   --fg: #333;
   --link: #0000cc;
+  --visited: purple;
   --muted: #666;
   --border: #d6d6d6;
   --button-bg: #ffffff;
@@ -92,6 +93,10 @@ a:hover {
   text-decoration: underline;
 }
 
+a:visited {
+  color: var(--muted);
+}
+
 .footer {
   text-align: center;
   margin-top: 1em;
@@ -152,7 +157,7 @@ body.dark {
   --fg: #eeeeee;
   --link: #4ea1ff;
   --muted: #999;
-  --border: #333;
+  --border: #444;
   --button-bg: #333;
   --input-bg: #2a2a2a;
   --input-border: #444;
@@ -165,13 +170,13 @@ body.dark .toast {
 
 /* ROSE PINE DAWN */
 body.rosepine-dawn {
-  --bg: #f4e1d2;
-  --fg: #191724;
-  --link: #a3c5e8;
-  --muted: #a6a0b3;
+  --bg: #faf4ed;
+  --fg: #575279;
+  --link: #286983;
+  --muted: #9893a5;
   --border: #d9a3c5;
-  --button-bg: #d9a3c5;
-  --input-bg: #f9d8e5;
+  --button-bg: #faf4ed;
+  --input-bg: #faf4ed;
   --input-border: #d9a3c5;
 }
 
@@ -187,8 +192,8 @@ body.rosepine-moonlight {
   --fg: #f5f0fa;
   --link: #88c0d0;
   --muted: #72738c;
-  --border: #2e2d3a;
-  --button-bg: #f5f0fa;
+  --border: #88c0d0;
+  --button-bg: #2e2d3a;
   --input-bg: #2e2d3a;
   --input-border: #88c0d0;
 }
@@ -198,7 +203,6 @@ body.rosepine-moonlight .toast {
   color: #f5f0fa;
   box-shadow: 0 0.5em 1em rgba(200, 200, 250, 0.2);
 }
-
 
 .title-bar {
   display: flex;
@@ -215,7 +219,6 @@ body.rosepine-moonlight .toast {
   color: var(--fg);
   border-radius: 5px;
 }
-
 
 /* Pagination */
 #pagination {
