@@ -11,7 +11,6 @@
   { "name": "Cosmic Voyage", "url": "https://cosmic.voyage/rss.xml" },
   { "name": "maia blog", "url": "https://maia.crimew.gay/feed.xml" },
   { "name": "Xe Iaso's blog", "url": "https://xeiaso.net/blog.rss" },
-  { "name": "4chan", "url": "https://raw.githubusercontent.com/fluteds/4chan-rss/refs/heads/master/rss.xml" },
   { "name": "sizeof(cat)", "url": "https://sizeof.cat/index.xml" },
   { "name": "the soap zone", "url": "https://soap.systems/rss.xml" },
   { "name": "Retro Handhelds", "url": "https://retrohandhelds.gg/feed/" },
