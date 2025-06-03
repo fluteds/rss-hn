@@ -16,12 +16,30 @@ Plus some more Rosé Pine inspired themes.
 
 ## Configuration
 
-The application uses a configuration file to manage settings such as theme preferences, RSS feed sources, and user-specific options. This file is located in the `config` directory and is loaded during application startup. Users can modify this file to:
+Currently, the application does not use a single configuration file. All settings, such as themes, feed item numbers to fetch, and cache refresh rates, are hardcoded in their respective files. Here’s what you can configure and where:
 
-- Add or remove RSS feed URLs.
-- [] Set a default theme for the application.
+- Feeds List:  
+  - `/config/feeds.json`  
+    - Add, remove, or edit RSS feeds to be aggregated.
 
-Changes to the configuration file are automatically applied on the next application restart, making it easy to customize the behavior of the RSS reader.
+- Frontend Settings:  
+  - `/public/index.html` (inside the `<script>` tag, `config` object)  
+    - `cacheExpirationMs`: Cache expiration time (ms)
+    - `refreshIntervalMs`: How often the UI checks for cache expiry (ms)
+    - `postsPerPage`: Number of posts per page
+    - `refreshApiEndpoint`: API endpoint for refreshing feeds
+    - `faviconProvider`: Logic for generating favicons for feed items
+    - `themes`: Theme options and default theme
+    - `toastDuration`: Duration for toast messages (ms)
+    - `pagination.maxVisibleButtons`: Max number of pagination buttons
+
+- Backend Settings:  
+  - `/api/fetchFeeds.js`  
+    - `MAX_ITEMS_PER_FEED`: Number of posts fetched from each feed
+
+All changes are applied on the next push to the repo, triggering an automatic build and deployment process. For more details on how the build system works, refer to [Vercel's deployment documentation](https://vercel.com/docs/concepts/deployments).
+
+Support for a config file may be added in the future to allow for a simpler way to customise default themes, cache refresh intervals, and other options instead of having each setting hardcoded in its own script. But for now, this is how it works.
 
 ## Setup
 

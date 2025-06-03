@@ -19,5 +19,6 @@
   { "name": "Autosport.com - Formula 1", "url": "https://www.autosport.com/rss/feed/f1" },
   { "name": "Fluted's Blog", "url": "https://fluted.omg.lol/rss.xml" },
   { "name": "Clear the Lobby", "url": "https://kill-the-newsletter.com/feeds/73nlirv0zvuev6n3iuol.xml" },
-  { "name": "Web3 Is Going Great", "url": "https://web3isgoinggreat.com/rss.xml" }
+  { "name": "Web3 Is Going Great", "url": "https://web3isgoinggreat.com/rss.xml" },
+  { "name": "LCOLONQ Twitch", "url": "https://twitchrss.appspot.com/vod/lcolonq" }
 ]
