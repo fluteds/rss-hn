@@ -1,5 +1,5 @@
 import Parser from 'rss-parser';
-import appConfig from '../public/config/config.json' assert { type: "json" };
+import appConfig from '../public/config/config.json' with { type: "json" };
 const parser = new Parser();
 
 export default async function fetchFeeds() {
