@@ -7,6 +7,7 @@
   { "name": "The Economist", "url": "http://www.economist.com/rss/finance_and_economics_rss.xml" },
   { "name": "The Verge", "url": "http://www.theverge.com/rss/full.xml" },
   { "name": "LeekDuck", "url": "https://rsshub.app/twitter/user/leekduck/exclude_rts_replies=1&forceWebApi=1" },
+    { "name": "Pikmin Bloom", "url": "https://rsshub.app/twitter/user/pikminbloom/exclude_rts_replies=1&forceWebApi=1" },
   { "name": "Flightradar24", "url": "http://www.flightradar24.com/blog/feed/" },
   { "name": "Cosmic Voyage", "url": "https://cosmic.voyage/rss.xml" },
   { "name": "maia blog", "url": "https://maia.crimew.gay/feed.xml" },
@@ -20,5 +21,6 @@
   { "name": "Fluted's Blog", "url": "https://fluted.omg.lol/rss.xml" },
   { "name": "Clear the Lobby", "url": "https://kill-the-newsletter.com/feeds/73nlirv0zvuev6n3iuol.xml" },
   { "name": "Web3 Is Going Great", "url": "https://web3isgoinggreat.com/rss.xml" },
-  { "name": "LCOLONQ Twitch", "url": "https://twitchrss.appspot.com/vod/lcolonq" }
+  { "name": "LCOLONQ Twitch", "url": "https://twitchrss.appspot.com/vod/lcolonq" },
+  { "name": "NRK", "url": "https://www.nrk.no/toppsaker.rss" }
 ]
