@@ -12,10 +12,13 @@
     <button id="refresh-button">🔄 Refresh Feeds</button>
     <div class="theme-selector">
       <select id="theme-select">
+        <option value="auto">🖥️ Auto</option>
         <option value="light">☀️ Light</option>
         <option value="dark">🌙 Dark</option>
         <option value="rosepine-dawn">🌹 Rosé Pine Dawn</option>
         <option value="rosepine-moonlight">🌚 Rosé Pine Moonlight</option>
+        <option value="gruvbox-light">🟤 Gruvbox Light</option>
+        <option value="gruvbox-dark">🟫 Gruvbox Dark</option>
       </select>
     </div>
   </div>
@@ -34,28 +37,51 @@
   <div id="toast" class="toast" aria-live="polite"></div>
 
   <script>
-    const config = {
-      cacheExpirationMs: 30 * 60 * 1000,  // 30 minutes cache expiration
-      refreshIntervalMs: 1000,           // 1 second refresh interval
-      postsPerPage: 30,              // Number of posts per page
-      refreshApiEndpoint: '/api/refresh-feeds', // API endpoint to refresh feeds
-      faviconProvider: (url) => {
-        try {
-          const host = new URL(url).hostname;
-          return `https://www.google.com/s2/favicons?domain=${host}&sz=32`;
-        } catch {
-          return '';
-        }
-      },
-      themes: {
-        default: 'dark',
-        options: ['light', 'dark', 'rosepine-dawn', 'rosepine-moonlight']
-      },
-      toastDuration: 4000, // Duration for toast messages
-      pagination: {
-        maxVisibleButtons: 5 // Maximum number of pagination buttons to show
+  let config = null;
+
+  async function loadConfig() {
+    const res = await fetch('/config/config.json');
+    config = (await res.json()).frontend;
+
+    // Add faviconProvider function to config
+    config.faviconProvider = function(url) {
+      try {
+        const u = new URL(url);
+        return `https://www.google.com/s2/favicons?domain=${u.hostname}`;
+      } catch {
+        return 'favicon.ico';
       }
     };
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'auto' || !savedTheme) {
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.className = 'dark';
+        document.getElementById('theme-select').value = 'auto';
+      } else {
+        document.body.className = 'light';
+        document.getElementById('theme-select').value = 'auto';
+      }
+    } else if (config.themes.options.includes(savedTheme)) {
+      document.body.className = savedTheme;
+      document.getElementById('theme-select').value = savedTheme;
+    } else if (config.themes.default === 'auto') {
+      // Fallback to config default
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.className = 'dark';
+        document.getElementById('theme-select').value = 'auto';
+      } else {
+        document.body.className = 'light';
+        document.getElementById('theme-select').value = 'auto';
+      }
+    } else {
+      document.body.className = config.themes.default;
+      document.getElementById('theme-select').value = config.themes.default;
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', async () => {
+    await loadConfig();
 
     const feedList = document.getElementById('feed-list');
     const refreshButton = document.getElementById('refresh-button');
@@ -107,7 +133,7 @@
           <div style="display: flex; align-items: center; gap: 1em;">
             <img src="${favicon}" alt="" class="favicon" />
             <div class="feed-content">
-              <a href="${item.link}" target="_blank" rel="noopener noreferrer">
+              <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="feed-link">
                 <strong>${item.title}</strong>
               </a>
               <div class="meta">
@@ -196,8 +222,11 @@
       const now = Date.now();
       const isValid = cached && lastUpdated && now - parseInt(lastUpdated, 10) < config.cacheExpirationMs;
 
+      // Track previous post IDs
+      let prevIds = [];
       if (cached) {
         allFeeds = JSON.parse(cached);
+        prevIds = allFeeds.map(f => f.link);
         renderFeeds(allFeeds, currentPage);
         renderPagination(allFeeds.length);
         lastUpdatedElement.textContent = `Last updated: ${new Date(parseInt(lastUpdated, 10)).toLocaleString()}`;
@@ -224,9 +253,23 @@
           localStorage.setItem(FEEDS_CACHE_KEY, JSON.stringify(allFeeds));
           localStorage.setItem(LAST_UPDATED_KEY, updated);
           lastUpdatedElement.textContent = `Last updated: ${new Date(updated).toLocaleString()}`;
-          showToast('✅ Feed refreshed successfully.');
+
+          // Toast for new posts or no new posts
+          // TODO: Add a new post separator
+          const newIds = allFeeds.map(f => f.link);
+          const newPostsCount = newIds.filter(id => !prevIds.includes(id)).length;
+          if (prevIds.length) {
+            if (newPostsCount > 0) {
+              showToast(`🆕 ${newPostsCount} new post${newPostsCount > 1 ? 's' : ''}!`);
+            } else {
+              showToast('📭 No new posts.');
+            }
+          } else {
+            showToast('✅ Feed refreshed successfully.');
+          }
         } else {
-          showToast('⚠️ Failed to fetch new feeds. Showing cache.');
+          renderFeeds(allFeeds, currentPage);
+          renderPagination(allFeeds.length);
         }
       } catch (err) {
         showToast('❌ Error refreshing feeds. Check connection.');
@@ -251,19 +294,61 @@
     });
 
     themeSelect.addEventListener('change', () => {
-      document.body.className = themeSelect.value;
-      localStorage.setItem('theme', themeSelect.value);
+      const value = themeSelect.value;
+      localStorage.setItem('theme', value);
+      if (value === 'auto') {
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          document.body.className = 'dark';
+        } else {
+          document.body.className = 'light';
+        }
+      } else {
+        document.body.className = value;
+      }
     });
 
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
+    if (savedTheme === 'auto' || !savedTheme) {
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.className = 'dark';
+        themeSelect.value = 'auto';
+      } else {
+        document.body.className = 'light';
+        themeSelect.value = 'auto';
+      }
+    } else if (config.themes.options.includes(savedTheme)) {
       document.body.className = savedTheme;
       themeSelect.value = savedTheme;
+    } else if (config.themes.default === 'auto') {
+      // Fallback to config default
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.className = 'dark';
+        themeSelect.value = 'auto';
+      } else {
+        document.body.className = 'light';
+        themeSelect.value = 'auto';
+      }
+    } else {
+      document.body.className = config.themes.default;
+      themeSelect.value = config.themes.default;
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      loadFeeds().then(scheduleAutoRefresh);
+    // Listen for OS theme changes and update if "auto" is selected
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'auto' || !savedTheme) {
+        if (e.matches) {
+          document.body.className = 'dark';
+        } else {
+          document.body.className = 'light';
+        }
+        // Optionally update the dropdown to reflect "auto"
+        themeSelect.value = 'auto';
+      }
     });
+
+    loadFeeds().then(scheduleAutoRefresh);
+  });
   </script>
 </body>
 </html>

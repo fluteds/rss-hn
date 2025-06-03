@@ -93,7 +93,7 @@ a:hover {
   text-decoration: underline;
 }
 
-a:visited {
+a.feed-link:visited {
   color: var(--muted);
 }
 
@@ -204,6 +204,40 @@ body.rosepine-moonlight .toast {
   box-shadow: 0 0.5em 1em rgba(200, 200, 250, 0.2);
 }
 
+/* GRUVBOX LIGHT */
+body.gruvbox-light {
+  --bg: #fbf1c7;
+  --fg: #3c3836;
+  --link: #b57614;
+  --muted: #928374;
+  --border: #ebdbb2;
+  --button-bg: #f9f5d7;
+  --input-bg: #f9f5d7;
+  --input-border: #ebdbb2;
+}
+
+body.gruvbox-light .toast {
+  background: #b57614;
+  color: #fffbe7;
+}
+
+/* GRUVBOX DARK */
+body.gruvbox-dark {
+  --bg: #282828;
+  --fg: #ebdbb2;
+  --link: #fabd2f;
+  --muted: #a89984;
+  --border: #504945;
+  --button-bg: #3c3836;
+  --input-bg: #3c3836;
+  --input-border: #504945;
+}
+
+body.gruvbox-dark .toast {
+  background: #fabd2f;
+  color: #282828;
+}
+
 .title-bar {
   display: flex;
   justify-content: space-between;
@@ -264,6 +298,31 @@ body.rosepine-moonlight .toast {
 
 .site-url:hover {
   text-decoration: underline;
+}
+
+.new-posts-separator {
+  text-align: center;
+  margin: 2em 0 1em 0;
+  font-size: 1.1em;
+  color: var(--fg);
+  letter-spacing: 0.1em;
+  position: relative;
+}
+
+.new-posts-separator span {
+  background: var(--bg);
+  padding: 0 1em;
+  display: inline-block;
+}
+
+.new-posts-separator:before,
+.new-posts-separator:after {
+  content: "";
+  display: inline-block;
+  width: 30%;
+  height: 2px;
+  vertical-align: middle;
+  margin: 0 0.5em;
 }
 
 /* Responsive */

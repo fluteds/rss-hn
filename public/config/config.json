@@ -1,0 +1,53 @@
+{
+  "feeds": [
+    { "name": "Hacker News", "url": "https://hnrss.org/frontpage" },
+    { "name": "Lobsters", "url": "https://lobste.rs/rss" },
+    { "name": "BBC Tech", "url": "http://feeds.bbci.co.uk/news/technology/rss.xml" },
+    { "name": "BBC News", "url": "http://newsrss.bbc.co.uk/rss/newsonline_world_edition/front_page/rss.xml" },
+    { "name": "New York Times", "url": "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml" },
+    { "name": "The Economist", "url": "http://www.economist.com/rss/finance_and_economics_rss.xml" },
+    { "name": "The Verge", "url": "http://www.theverge.com/rss/full.xml" },
+    { "name": "LeekDuck", "url": "https://rsshub.app/twitter/user/leekduck/exclude_rts_replies=1&forceWebApi=1" },
+    { "name": "Pikmin Bloom", "url": "https://rsshub.app/twitter/user/pikminbloom/exclude_rts_replies=1&forceWebApi=1" },
+    { "name": "Flightradar24", "url": "http://www.flightradar24.com/blog/feed/" },
+    { "name": "Cosmic Voyage", "url": "https://cosmic.voyage/rss.xml" },
+    { "name": "maia blog", "url": "https://maia.crimew.gay/feed.xml" },
+    { "name": "Xe Iaso's blog", "url": "https://xeiaso.net/blog.rss" },
+    { "name": "sizeof(cat)", "url": "https://sizeof.cat/index.xml" },
+    { "name": "the soap zone", "url": "https://soap.systems/rss.xml" },
+    { "name": "Retro Handhelds", "url": "https://retrohandhelds.gg/feed/" },
+    { "name": "Ersei 'n Notes", "url": "https://ersei.net/en/notes.atom" },
+    { "name": "Ersei 'n Stuff", "url": "https://ersei.net/en/blog.atom" },
+    { "name": "Autosport.com - Formula 1", "url": "https://www.autosport.com/rss/feed/f1" },
+    { "name": "Fluted's Blog", "url": "https://fluted.omg.lol/rss.xml" },
+    { "name": "Clear the Lobby", "url": "https://kill-the-newsletter.com/feeds/73nlirv0zvuev6n3iuol.xml" },
+    { "name": "Web3 Is Going Great", "url": "https://web3isgoinggreat.com/rss.xml" },
+    { "name": "LCOLONQ Twitch", "url": "https://twitchrss.appspot.com/vod/lcolonq" },
+    { "name": "NRK", "url": "https://www.nrk.no/toppsaker.rss" },
+    { "name": "Tynsetingen", "url": "http://tynsetingen.no/feed" }
+  ],
+  "frontend": {
+    "cacheExpirationMs": 1800000,
+    "refreshIntervalMs": 1000,
+    "postsPerPage": 30,
+    "refreshApiEndpoint": "/api/refresh-feeds",
+    "themes": {
+      "default": "auto",
+      "options": [
+        "light",
+        "dark",
+        "rosepine-dawn",
+        "rosepine-moonlight",
+        "gruvbox-light",
+        "gruvbox-dark"
+      ]
+    },
+    "toastDuration": 4000,
+    "pagination": {
+      "maxVisibleButtons": 5
+    }
+  },
+  "backend": {
+    "maxItemsPerFeed": 10
+  }
+}

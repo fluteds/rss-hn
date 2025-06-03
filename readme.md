@@ -10,36 +10,22 @@ Plus some more Rosé Pine inspired themes.
 
 ## How it works
 
-- Scrapes a list of RSS feeds in `/config/feeds.json`.
+- Aggregates a list of RSS feeds defined in a single config file.
 - Formats them into a Hacker News style page sorted by newest first.
-- Uses a serverless backend to regenerate posts and also uses a in browser caching mechanism to store fetched RSS feed data temporarily, reducing the time to reload.
+- Uses a serverless backend to regenerate posts and an in-browser caching mechanism to store fetched RSS feed data temporarily, reducing reload times.
 
 ## Configuration
 
-Currently, the application does not use a single configuration file. All settings, such as themes, feed item numbers to fetch, and cache refresh rates, are hardcoded in their respective files. Here’s what you can configure and where:
+All settings are now in a single file:
 
-- Feeds List:  
-  - `/config/feeds.json`  
-    - Add, remove, or edit RSS feeds to be aggregated.
+- `/public/config/config.json`  
+  - `feeds`: List of RSS feeds to aggregate.
+  - `frontend`: UI settings (cache, refresh, themes, pagination, etc).
+  - `backend`: Backend settings (max items per feed, etc).
 
-- Frontend Settings:  
-  - `/public/index.html` (inside the `<script>` tag, `config` object)  
-    - `cacheExpirationMs`: Cache expiration time (ms)
-    - `refreshIntervalMs`: How often the UI checks for cache expiry (ms)
-    - `postsPerPage`: Number of posts per page
-    - `refreshApiEndpoint`: API endpoint for refreshing feeds
-    - `faviconProvider`: Logic for generating favicons for feed items
-    - `themes`: Theme options and default theme
-    - `toastDuration`: Duration for toast messages (ms)
-    - `pagination.maxVisibleButtons`: Max number of pagination buttons
+Edit this file to change feeds, UI options, or backend limits.
 
-- Backend Settings:  
-  - `/api/fetchFeeds.js`  
-    - `MAX_ITEMS_PER_FEED`: Number of posts fetched from each feed
-
-All changes are applied on the next push to the repo, triggering an automatic build and deployment process. For more details on how the build system works, refer to [Vercel's deployment documentation](https://vercel.com/docs/concepts/deployments).
-
-Support for a config file may be added in the future to allow for a simpler way to customise default themes, cache refresh intervals, and other options instead of having each setting hardcoded in its own script. But for now, this is how it works.
+The default theme is set via the config file (`themes.default`), and is currently set to `auto`, which follows your OS settings but you can override this with the dropdown.
 
 ## Setup
 
