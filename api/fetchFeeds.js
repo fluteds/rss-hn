@@ -1,5 +1,5 @@
 import Parser from 'rss-parser';
-import appConfig from '../public/config/config.json' with { type: "json" };
+import appConfig from '../public/config/config.json';
 const parser = new Parser();
 
 export default async function fetchFeeds() {
@@ -27,6 +27,7 @@ export default async function fetchFeeds() {
             }
 
             return {
+              guid: item.guid || item.id || item.link || '', // <-- ADD THIS LINE
               title: item.title || '',
               link: item.link || '',
               pubDate: pubDate.toISOString(),

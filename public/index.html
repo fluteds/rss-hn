@@ -125,7 +125,36 @@
       const startIndex = (page - 1) * config.postsPerPage;
       const paginatedItems = items.slice(startIndex, startIndex + config.postsPerPage);
 
+      // Get previous posts from cache
+      const cachedFeeds = JSON.parse(localStorage.getItem('cachedFeeds') || '[]');
+      const prevMap = {};
+      cachedFeeds.forEach(f => {
+        prevMap[f.guid || f.link] = f;
+      });
+
+      // Classify posts
+      const newPosts = [];
+      const updatedPosts = [];
+      const oldPosts = [];
+
       paginatedItems.forEach(item => {
+        const id = item.guid || item.link;
+        const prev = prevMap[id];
+        if (!prev) {
+          newPosts.push(item);
+        } else if (
+          prev.title !== item.title ||
+          prev.pubDate !== item.pubDate
+          // Add more fields if you want to check for more changes
+        ) {
+          updatedPosts.push(item);
+        } else {
+          oldPosts.push(item);
+        }
+      });
+
+      // Render new posts
+      newPosts.forEach(item => {
         const li = document.createElement('li');
         const favicon = config.faviconProvider(item.link || '');
         const pubDate = new Date(item.pubDate);
@@ -134,7 +163,69 @@
             <img src="${favicon}" alt="" class="favicon" />
             <div class="feed-content">
               <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="feed-link">
-                <strong>${item.title}</strong>
+                ${item.title}
+              </a>
+              <div class="meta">
+                ${item.siteBaseUrl ? `<a href="https://${item.siteBaseUrl}" target="_blank" class="site-url">${item.siteBaseUrl}</a>` : '<span class="site-url">Unknown</span>'}
+                • ${timeAgo(pubDate)} • ${item.source || 'Unknown'}
+              </div>
+            </div>
+          </div>
+        `;
+        feedList.appendChild(li);
+      });
+
+      // Separator for new posts
+      if (config.showNewPostsSeparator && newPosts.length) {
+        const sep = document.createElement('div');
+        sep.className = 'new-posts-separator';
+        sep.innerHTML = `<div class="separator-line"><span>↑ New Posts ↑</span></div>`;
+        feedList.appendChild(sep);
+      }
+
+      // Render updated posts
+      if (config.showUpdatedPosts) {
+        updatedPosts.forEach(item => {
+          const li = document.createElement('li');
+          const favicon = config.faviconProvider(item.link || '');
+          const pubDate = new Date(item.pubDate);
+          li.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 1em;">
+              <img src="${favicon}" alt="" class="favicon" />
+              <div class="feed-content">
+                <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="feed-link">
+                  ${item.title} <span class="updated-label">(updated)</span>
+                </a>
+                <div class="meta">
+                  ${item.siteBaseUrl ? `<a href="https://${item.siteBaseUrl}" target="_blank" class="site-url">${item.siteBaseUrl}</a>` : '<span class="site-url">Unknown</span>'}
+                  • ${timeAgo(pubDate)} • ${item.source || 'Unknown'}
+                </div>
+              </div>
+            </div>
+          `;
+          feedList.appendChild(li);
+        });
+
+        // Separator for updated posts
+        if (config.showUpdatedPostsSeparator && updatedPosts.length) {
+          const sep = document.createElement('div');
+          sep.className = 'new-posts-separator';
+          sep.innerHTML = `<div class="separator-line"><span>↑ Updated Posts ↑</span></div>`;
+          feedList.appendChild(sep);
+        }
+      }
+
+      // Render old posts
+      oldPosts.forEach(item => {
+        const li = document.createElement('li');
+        const favicon = config.faviconProvider(item.link || '');
+        const pubDate = new Date(item.pubDate);
+        li.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 1em;">
+            <img src="${favicon}" alt="" class="favicon" />
+            <div class="feed-content">
+              <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="feed-link">
+                ${item.title}
               </a>
               <div class="meta">
                 ${item.siteBaseUrl ? `<a href="https://${item.siteBaseUrl}" target="_blank" class="site-url">${item.siteBaseUrl}</a>` : '<span class="site-url">Unknown</span>'}
@@ -226,7 +317,7 @@
       let prevIds = [];
       if (cached) {
         allFeeds = JSON.parse(cached);
-        prevIds = allFeeds.map(f => f.link);
+        prevIds = allFeeds.map(f => f.guid || f.link); // <-- update here too
         renderFeeds(allFeeds, currentPage);
         renderPagination(allFeeds.length);
         lastUpdatedElement.textContent = `Last updated: ${new Date(parseInt(lastUpdated, 10)).toLocaleString()}`;
@@ -255,14 +346,17 @@
           lastUpdatedElement.textContent = `Last updated: ${new Date(updated).toLocaleString()}`;
 
           // Toast for new posts or no new posts
-          // TODO: Add a new post separator
           const newIds = allFeeds.map(f => f.link);
           const newPostsCount = newIds.filter(id => !prevIds.includes(id)).length;
+
           if (prevIds.length) {
-            if (newPostsCount > 0) {
+            if (newPostsCount > 0 && newPostsCount < allFeeds.length) {
               showToast(`🆕 ${newPostsCount} new post${newPostsCount > 1 ? 's' : ''}!`);
-            } else {
+            } else if (newPostsCount === 0) {
               showToast('📭 No new posts.');
+            } else {
+              // All posts are new (first load or cache clear)
+              showToast('✅ Feed refreshed successfully.');
             }
           } else {
             showToast('✅ Feed refreshed successfully.');

@@ -31,6 +31,9 @@
     "refreshIntervalMs": 1000,
     "postsPerPage": 30,
     "refreshApiEndpoint": "/api/refresh-feeds",
+    "showNewPostsSeparator": true,
+    "showUpdatedPosts": true,
+    "showUpdatedPostsSeparator": true,
     "themes": {
       "default": "auto",
       "options": [

@@ -11,7 +11,7 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   margin: 2em auto;
   max-width: 600px; 
   background: var(--bg);
@@ -132,6 +132,13 @@ a.feed-link:visited {
 small, .meta {
   color: var(--muted);
   font-size: 0.9em;
+}
+
+.updated-label {
+  color: var(--link);
+  font-size: 0.95em;
+  margin-left: 0.5em;
+  vertical-align: middle;
 }
 
 /* LIGHT THEME */
@@ -301,28 +308,33 @@ body.gruvbox-dark .toast {
 }
 
 .new-posts-separator {
+  list-style: none;
+  margin: 1em 0 1em 0;
+  padding: 0;
   text-align: center;
-  margin: 2em 0 1em 0;
-  font-size: 1.1em;
-  color: var(--fg);
-  letter-spacing: 0.1em;
-  position: relative;
 }
 
-.new-posts-separator span {
+.separator-line {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  color: var(--muted);
+}
+
+.separator-line::before,
+.separator-line::after {
+  content: "";
+  flex: 1;
+  border-bottom: 2px solid var(--muted);
+  opacity: 0.3;
+}
+
+.separator-line span {
+  white-space: nowrap;
   background: var(--bg);
   padding: 0 1em;
-  display: inline-block;
-}
-
-.new-posts-separator:before,
-.new-posts-separator:after {
-  content: "";
-  display: inline-block;
-  width: 30%;
-  height: 2px;
-  vertical-align: middle;
-  margin: 0 0.5em;
+  border-radius: 1em;
 }
 
 /* Responsive */
