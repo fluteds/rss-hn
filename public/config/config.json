@@ -4,7 +4,6 @@
     { "name": "Lobsters", "url": "https://lobste.rs/rss" },
     { "name": "BBC Tech", "url": "http://feeds.bbci.co.uk/news/technology/rss.xml" },
     { "name": "BBC News", "url": "http://newsrss.bbc.co.uk/rss/newsonline_world_edition/front_page/rss.xml" },
-    { "name": "New York Times", "url": "http://www.nytimes.com/services/xml/rss/nyt/HomePage.xml" },
     { "name": "The Economist", "url": "http://www.economist.com/rss/finance_and_economics_rss.xml" },
     { "name": "The Verge", "url": "http://www.theverge.com/rss/full.xml" },
     { "name": "LeekDuck", "url": "https://rsshub.app/twitter/user/leekduck/exclude_rts_replies=1&forceWebApi=1" },
