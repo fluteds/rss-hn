@@ -136,9 +136,7 @@ small, .meta {
 
 .updated-label {
   color: var(--link);
-  font-size: 0.95em;
-  margin-left: 0.5em;
-  vertical-align: middle;
+  text-transform: uppercase;
 }
 
 /* LIGHT THEME */

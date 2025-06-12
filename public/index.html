@@ -194,7 +194,8 @@
               <img src="${favicon}" alt="" class="favicon" />
               <div class="feed-content">
                 <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="feed-link">
-                  ${item.title} <span class="updated-label">(updated)</span>
+                  <span class="updated-label">Updated</span> 
+                  ${item.title}
                 </a>
                 <div class="meta">
                   ${item.siteBaseUrl ? `<a href="https://${item.siteBaseUrl}" target="_blank" class="site-url">${item.siteBaseUrl}</a>` : '<span class="site-url">Unknown</span>'}
