@@ -1,10 +1,10 @@
 {
   "name": "rss-hn",
   "version": "1.0.0",
-  "description": "Simple RSS reader like Hacker News",
-  "main": "server/fetchFeeds.js",
+  "description": "Simple RSS reader inspired by Hacker News",
+  "main": "server/fetch-feeds.js",
   "scripts": {
-    "feeds": "node server/fetchFeeds.js"
+    "feeds": "node server/fetch-feeds.js"
   },
   "dependencies": {
     "rss-parser": "^3.12.0",

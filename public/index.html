@@ -195,7 +195,7 @@
               <img src="${favicon}" alt="" class="favicon" />
               <div class="feed-content">
                 <a href="${item.link}" target="_blank" rel="noopener noreferrer" class="feed-link">
-                  <span class="updated-label">Updated</span> 
+                  <span class="updated-label">Updated | </span> 
                   ${item.title}
                 </a>
                 <div class="meta">
@@ -353,7 +353,7 @@
 
           if (prevIds.length) {
             if (newPostsCount > 0 && newPostsCount < allFeeds.length) {
-              showToast(`🆕 ${newPostsCount} new post${newPostsCount > 1 ? 's' : ''}!`);
+              showToast(`🆕 ${newPostsCount} post${newPostsCount > 1 ? 's' : ''} fetched!`);
             } else if (newPostsCount === 0) {
               showToast('📭 No new posts.');
             } else {

@@ -1,8 +1,14 @@
 import Parser from 'rss-parser';
-import appConfig from '../public/config/config.json';
+import { readFile } from 'fs/promises';
+import path from 'path';
 const parser = new Parser();
 
 export default async function fetchFeeds() {
+  // Dynamically load config
+  const configPath = path.join(process.cwd(), 'public', 'config', 'config.json');
+  const configRaw = await readFile(configPath, 'utf8');
+  const appConfig = JSON.parse(configRaw);
+
   const allItems = [];
   const MAX_ITEMS_PER_FEED = appConfig.backend.maxItemsPerFeed;
   const feeds = appConfig.feeds;
@@ -27,7 +33,7 @@ export default async function fetchFeeds() {
             }
 
             return {
-              guid: item.guid || item.id || item.link || '', // <-- ADD THIS LINE
+              guid: item.guid || item.id || item.link || '',
               title: item.title || '',
               link: item.link || '',
               pubDate: pubDate.toISOString(),

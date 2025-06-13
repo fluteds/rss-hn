@@ -18,7 +18,7 @@ Plus some more popular colour scheme themes.
 
 The reader displays posts sorted by newest first, based on the data provided by each RSS feed. Sometimes, you may notice older posts resurfacing at the top. This happens because some feed providers update the unique identifier (`guid`) or the published date of existing posts, causing them to be treated as new entries by the reader.
 
-This behavior is determined by the feed provider, not the reader itself. The reader simply reflects the latest state of the feed as published by the source. It's annoying but there's not a lot I can do other than add an "Updated Posts" section.
+This behavior is determined by the feed provider, not the reader itself. The reader simply reflects the latest state of the feed as published by the source. It's annoying but there's not a lot I can do other than add an "Updated Posts" section but even then that is hit or miss too.
 
 ## Configuration
 

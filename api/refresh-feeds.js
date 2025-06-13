@@ -1,7 +1,5 @@
 // This API route is used to refresh the feeds.json file by fetching the latest feeds.
-import { writeFile } from 'fs/promises';
-import path from 'path';
-import fetchFeeds from './fetchFeeds.js';
+import fetchFeeds from './fetch-feeds.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {

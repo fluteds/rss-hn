@@ -50,6 +50,6 @@
     }
   },
   "backend": {
-    "maxItemsPerFeed": 10
+    "maxItemsPerFeed": 8
   }
 }
