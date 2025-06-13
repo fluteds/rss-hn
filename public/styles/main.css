@@ -180,8 +180,8 @@ body.rosepine-dawn {
   --link: #286983;
   --muted: #9893a5;
   --border: #d9a3c5;
-  --button-bg: #faf4ed;
-  --input-bg: #faf4ed;
+  --button-bg: #f3ede6;
+  --input-bg: #f3ede6;
   --input-border: #d9a3c5;
 }
 
@@ -192,14 +192,14 @@ body.rosepine-dawn .toast {
 
 /* ROSE PINE MOONLIGHT */
 body.rosepine-moonlight {
-  --bg: #16161d;
+  --bg: #232236;
   --fg: #f5f0fa;
   --link: #88c0d0;
   --muted: #72738c;
-  --border: #88c0d0;
-  --button-bg: #2e2d3a;
-  --input-bg: #2e2d3a;
-  --input-border: #88c0d0;
+  --border: #ea9b97;
+  --button-bg: #302e49;
+  --input-bg: #302e49;
+  --input-border: #ea9b97;
 }
 
 body.rosepine-moonlight .toast {
