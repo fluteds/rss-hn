@@ -188,7 +188,6 @@ body.rosepine-dawn {
 body.rosepine-dawn .toast {
   background: #d4b2c8;
   color: #191724;
-  box-shadow: 0 0.5em 1em rgba(100, 80, 100, 0.3);
 }
 
 /* ROSE PINE MOONLIGHT */
@@ -206,7 +205,6 @@ body.rosepine-moonlight {
 body.rosepine-moonlight .toast {
   background: #2e2d3a;
   color: #f5f0fa;
-  box-shadow: 0 0.5em 1em rgba(200, 200, 250, 0.2);
 }
 
 /* GRUVBOX LIGHT */

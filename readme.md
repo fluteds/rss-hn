@@ -6,19 +6,19 @@ My take on an RSS feed reader that's styled like [Hacker News](https://news.ycom
 |------------------------------------------------------|----------------------------------------------------|
 | Light Mode                                           | Dark Mode                                          |
 
-Plus some more Rosé Pine inspired themes.
+Plus some more popular colour scheme themes.
 
 ## How it works
 
 - Aggregates a list of RSS feeds defined in a single config file.
 - Formats them into a Hacker News style page sorted by newest first.
-- Uses a serverless backend to regenerate posts and an in-browser caching mechanism to store fetched RSS feed data temporarily, reducing reload times.
+- Uses a serverless backend to regenerate posts and an in-browser caching mechanism to store fetched RSS feed data temporarily, attempting to reduce reload times.
 
-### Why is it showing older "new" posts?
+### Why is it showing older posts as new?
 
-The reader displays posts sorted by newest first, based on the data provided by each RSS feed. Sometimes, you may notice older posts appearing as "new" or resurfacing at the top. This happens because some feed providers update the unique identifier (`guid`) or the published date of existing posts, causing them to be treated as new entries by the reader.
+The reader displays posts sorted by newest first, based on the data provided by each RSS feed. Sometimes, you may notice older posts resurfacing at the top. This happens because some feed providers update the unique identifier (`guid`) or the published date of existing posts, causing them to be treated as new entries by the reader.
 
-This behavior is determined by the feed provider, not the reader itself. The reader simply reflects the latest state of the feed as published by the source. It's annoying but there's not a lot I can do.
+This behavior is determined by the feed provider, not the reader itself. The reader simply reflects the latest state of the feed as published by the source. It's annoying but there's not a lot I can do other than add an "Updated Posts" section.
 
 ## Configuration
 
@@ -26,14 +26,18 @@ All settings are managed in a single file `/public/config/config.json`.
 
 This file contains the following sections:
 
-- `feeds`:  
+- Feeds `(feeds)`
+
   An array of RSS feed objects. Each feed has:
+
   - `name`: Display name for the feed.
   - `url`: The RSS feed URL.
   - `enabled`: Boolean to include/exclude the feed.
 
-- `frontend`:  
-  UI and client-side settings, such as:
+- Frontend `(frontend)`
+
+  UI and client side settings, such as:
+
   - `cacheExpirationMs`: How long (in milliseconds) to cache fetched feed data in the browser.
   - `refreshIntervalMs`: How often (in milliseconds) the frontend checks for new posts.
   - `postsPerPage`: Number of posts to show per page.
@@ -48,11 +52,15 @@ This file contains the following sections:
   - `pagination`:  
     - `maxVisibleButtons`: Maximum number of visible pagination buttons.
 
-- `backend`:  
-  Server-side settings, including:
+- Backend `(backend)`
+
+  Server side settings, including:
+
   - `maxItemsPerFeed`: Maximum number of items to fetch from each feed.
 
 ## Setup
+
+The setup is tailored to run via Vercel, as I use Vercel to host the site.
 
 - Clone the repo
 - Install dependencies with `npm install`
