@@ -26,37 +26,37 @@ All settings are managed in a single file `/public/config/config.json`.
 
 This file contains the following sections:
 
-- Feeds `(feeds)`
+### Feeds `(feeds)`
 
   An array of RSS feed objects. Each feed has:
 
-  - `name`: Display name for the feed.
-  - `url`: The RSS feed URL.
-  - `enabled`: Boolean to include/exclude the feed.
+- `name`: Display name for the feed.
+- `url`: The RSS feed URL.
+- `enabled`: Boolean to include/exclude the feed.
 
-- Frontend `(frontend)`
+### Frontend `(frontend)`
 
   UI and client side settings, such as:
 
-  - `cacheExpirationMs`: How long (in milliseconds) to cache fetched feed data in the browser.
-  - `refreshIntervalMs`: How often (in milliseconds) the frontend checks for new posts.
-  - `postsPerPage`: Number of posts to show per page.
-  - `refreshApiEndpoint`: API endpoint to refresh feeds.
-  - `showNewPostsSeparator`: Show a divider line before old posts if there are new posts (`true`/`false`).
-  - `showUpdatedPosts`: Show a section for updated posts (`true`/`false`).
-  - `showUpdatedPostsSeparator`: Show a divider line before old posts if there are updated posts (`true`/`false`).
-  - `themes`:  
-    - `default`: The default theme (`auto`, `light`, `dark`, or a Rosé Pine/Gruvbox variant).
-    - `options`: List of selectable themes (e.g., `["light", "dark", "rosepine-dawn", ...]`).
-  - `toastDuration`: Duration for toast notifications in milliseconds.
-  - `pagination`:  
-    - `maxVisibleButtons`: Maximum number of visible pagination buttons.
+- `cacheExpirationMs`: How long (in milliseconds) to cache fetched feed data in the browser.
+- `refreshIntervalMs`: How often (in milliseconds) the frontend checks for new posts.
+- `postsPerPage`: Number of posts to show per page.
+- `refreshApiEndpoint`: API endpoint to refresh feeds.
+- `showNewPostsSeparator`: Show a divider line before old posts if there are new posts (`true`/`false`).
+- `showUpdatedPosts`: Show a section for updated posts (`true`/`false`).
+- `showUpdatedPostsSeparator`: Show a divider line before old posts if there are updated posts (`true`/`false`).
+- `themes`:  
+  - `default`: The default theme (`auto`, `light`, `dark`, or a Rosé Pine/Gruvbox variant).
+  - `options`: List of selectable themes (e.g., `["light", "dark", "rosepine-dawn", ...]`).
+- `toastDuration`: Duration for toast notifications in milliseconds.
+- `pagination`:  
+  - `maxVisibleButtons`: Maximum number of visible pagination buttons.
 
-- Backend `(backend)`
+### Backend `(backend)`
 
   Server side settings, including:
 
-  - `maxItemsPerFeed`: Maximum number of items to fetch from each feed.
+- `maxItemsPerFeed`: Maximum number of items to fetch from each feed.
 
 ## Setup
 
