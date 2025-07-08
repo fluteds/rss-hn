@@ -23,7 +23,8 @@
     { "name": "Web3 Is Going Great", "url": "https://web3isgoinggreat.com/rss.xml" },
     { "name": "LCOLONQ Twitch", "url": "https://twitchrss.appspot.com/vod/lcolonq" },
     { "name": "NRK", "url": "https://www.nrk.no/toppsaker.rss" },
-    { "name": "Tynsetingen", "url": "http://tynsetingen.no/feed" }
+    { "name": "Tynsetingen", "url": "http://tynsetingen.no/feed" },
+    { "name": "Home Assistant Blog", "url": "https://www.home-assistant.io/atom.xml" }
   ],
   "frontend": {
     "cacheExpirationMs": 1800000,
