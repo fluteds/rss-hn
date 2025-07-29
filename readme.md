@@ -66,3 +66,7 @@ The setup is tailored to run via Vercel, as I use Vercel to host the site.
 - Install dependencies with `npm install`
 - Ensure you have [Vercel CLI](https://vercel.com/docs/cli) installed (e.g., `npm install -g vercel`) and configured
 - Use Vercel to setup locally with `vercel dev`
+
+### Paywalls
+
+Most of these sites annoyingly have some form of paywall. There are alternatives to view these articles if you go [digging](https://fluted.omg.lol/links#-arrgh) a little bit.

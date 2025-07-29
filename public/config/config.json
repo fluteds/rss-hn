@@ -2,12 +2,9 @@
   "feeds": [
     { "name": "Hacker News", "url": "https://hnrss.org/frontpage" },
     { "name": "Lobsters", "url": "https://lobste.rs/rss" },
-    { "name": "BBC Tech", "url": "http://feeds.bbci.co.uk/news/technology/rss.xml" },
     { "name": "BBC News", "url": "http://newsrss.bbc.co.uk/rss/newsonline_world_edition/front_page/rss.xml" },
     { "name": "The Economist", "url": "http://www.economist.com/rss/finance_and_economics_rss.xml" },
     { "name": "The Verge", "url": "http://www.theverge.com/rss/full.xml" },
-    { "name": "LeekDuck", "url": "https://rsshub.app/twitter/user/leekduck/exclude_rts_replies=1&forceWebApi=1" },
-    { "name": "Pikmin Bloom", "url": "https://rsshub.app/twitter/user/pikminbloom/exclude_rts_replies=1&forceWebApi=1" },
     { "name": "Flightradar24", "url": "http://www.flightradar24.com/blog/feed/" },
     { "name": "Cosmic Voyage", "url": "https://cosmic.voyage/rss.xml" },
     { "name": "maia blog", "url": "https://maia.crimew.gay/feed.xml" },
@@ -23,8 +20,8 @@
     { "name": "Web3 Is Going Great", "url": "https://web3isgoinggreat.com/rss.xml" },
     { "name": "LCOLONQ Twitch", "url": "https://twitchrss.appspot.com/vod/lcolonq" },
     { "name": "NRK", "url": "https://www.nrk.no/toppsaker.rss" },
-    { "name": "Tynsetingen", "url": "http://tynsetingen.no/feed" },
-    { "name": "Home Assistant Blog", "url": "https://www.home-assistant.io/atom.xml" }
+    { "name": "Home Assistant Blog", "url": "https://www.home-assistant.io/atom.xml" },
+    { "name": "Public Domain Recipes", "url": "https://publicdomainrecipes.com/index.xml" }
   ],
   "frontend": {
     "cacheExpirationMs": 1800000,
@@ -51,6 +48,6 @@
     }
   },
   "backend": {
-    "maxItemsPerFeed": 8
+    "maxItemsPerFeed": 10
   }
 }
